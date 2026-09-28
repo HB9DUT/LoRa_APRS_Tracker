@@ -58,6 +58,7 @@ ____________________________________________________
     - Main loop idles 10 ms per cycle to lower current draw.
     - AXP192/AXP2101 battery reading every 30 s instead of every second (charging LED still checked every second).
     - Default config: gpsEcoMode enabled for runner and bike profiles (car profile keeps GPS on for corner pegging).
+    - Low voltage power-off only when a battery is detected (USB without battery no longer shuts the tracker down).
     - Sponsoring/donation links removed.
 - 2026-04-22 BT Classic packet fix.
 - 2026-01-19 A few bugs fixes on screen timeout and other issues.
@@ -164,4 +165,3 @@ ____________________________________________________
 - https://github.com/dl9sau/TTGO-T-Beam-LoRa-APRS : Thomas - DL9SAU for the Kiss <> TNC2 lib
 ____________________________________________________
 
-# Hope You Enjoy this, 73! CA2RXU, Valparaiso, Chile

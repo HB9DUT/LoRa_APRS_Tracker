@@ -28,6 +28,7 @@ ____________________________________________________
 - Wx data with BME280 Module showed on Screen and transmited as Wx Telemetry.
 - Winlink Mails through APRSLink.
 - Posibility to change between 3 major Frequencies used by LoRa APRS Worldwide.
+- Listen before talk: channel activity detection (CAD) before each Tx with random backoff if the channel is busy.
 ____________________________________________________
 
 # WIKI (English / Español)
@@ -47,6 +48,17 @@ ____________________________________________________
 ____________________________________________________
 ## Timeline (Versions):
 
+- 2026-09-28 Stability, radio and power optimizations (HB9DUT):
+    - SmartBeacon: heading change across North now calculated correctly (355° -> 5° = 10°, no more false corner beacons).
+    - LoRa Rx interrupt flag made `volatile` + `IRAM_ATTR`.
+    - Saved callsign/frequency index is validated against the config (no out-of-range access after removing beacons).
+    - Listen before talk (CAD) with random backoff before each Tx (max. 3 tries, then Tx anyway). SX127x reads the CAD result from the IRQ register (DIO1 not wired).
+    - SX1278/SX1276 over current protection raised from 100 to 140 mA so +20 dBm is not clipped.
+    - GPS serial Rx buffer 2048 bytes so NMEA data is not lost during long Tx (SF12).
+    - Main loop idles 10 ms per cycle to lower current draw.
+    - AXP192/AXP2101 battery reading every 30 s instead of every second (charging LED still checked every second).
+    - Default config: gpsEcoMode enabled for runner and bike profiles (car profile keeps GPS on for corner pegging).
+    - Sponsoring/donation links removed.
 - 2026-04-22 BT Classic packet fix.
 - 2026-01-19 A few bugs fixes on screen timeout and other issues.
 - 2025-12-01 APRSPacketLib update.

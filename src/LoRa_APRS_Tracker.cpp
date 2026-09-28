@@ -34,7 +34,6 @@
 
                        Ricardo Guzman - CA2RXU
           https://github.com/richonguzman/LoRa_APRS_Tracker
-             (donations : http://paypal.me/richonguzman)
 ____________________________________________________________________*/
 
 #include <BluetoothSerial.h>
@@ -268,4 +267,5 @@ void loop() {
             refreshDisplayTime = millis();
         }
     }
+    delay(10);  // let the idle task run (CPU waits instead of busy looping) to lower current draw
 }

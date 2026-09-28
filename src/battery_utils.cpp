@@ -38,6 +38,9 @@
 
 extern      Configuration           Config;
 uint32_t    batteryMeasurmentTime   = 0;
+#if defined(HAS_AXP192) || defined(HAS_AXP2101)
+    uint32_t    chargingLedTime     = 0;
+#endif
 int         averageReadings         = 20;
 
 String      batteryVoltage          = "";
@@ -114,10 +117,13 @@ namespace BATTERY_Utils {
 
     void monitor() {
         #if defined(HAS_AXP192) || defined(HAS_AXP2101)
-            if (batteryMeasurmentTime == 0 || (millis() - batteryMeasurmentTime) > 1 * 1000){
+            if (batteryMeasurmentTime == 0 || (millis() - batteryMeasurmentTime) > 30 * 1000){
                 obtainBatteryInfo();
-                POWER_Utils::handleChargingLed();
                 batteryMeasurmentTime = millis();
+            }
+            if (chargingLedTime == 0 || (millis() - chargingLedTime) > 1 * 1000){   // keep charging LED responsive
+                POWER_Utils::handleChargingLed();
+                chargingLedTime = millis();
             }
         #elif defined(BATTERY_PIN)
             if (batteryMeasurmentTime == 0 || (millis() - batteryMeasurmentTime) > 30 * 1000){ //At least 30 seconds have to pass between measurements

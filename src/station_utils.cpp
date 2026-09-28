@@ -324,16 +324,16 @@ namespace STATION_Utils {
                 int index = firstLine.toInt();
                 String logMessage;
                 if (type == 0) {
-                    myBeaconsIndex = index;
+                    myBeaconsIndex = (index >= 0 && index < (int)Config.beacons.size()) ? index : 0;
                     logMessage = "Callsign Index:";
                 } else if (type == 1) {
-                    loraIndex = index;
+                    loraIndex = (index >= 0 && index < (int)Config.loraTypes.size()) ? index : 0;
                     logMessage = "LoRa Freq Index:";
                 } else {
                     screenBrightness = index;
                     logMessage = "Brightness:";
                 }
-                logger.log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, "Main", "%s %s", logMessage.c_str(), firstLine);
+                logger.log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, "Main", "%s %s", logMessage.c_str(), firstLine.c_str());
             }
             fileIndex.close();
         }

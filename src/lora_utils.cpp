@@ -31,7 +31,7 @@ extern LoraType         *currentLoRaType;
 extern uint8_t          loraIndex;
 extern int              loraIndexSize;
 
-bool operationDone   = true;
+volatile bool operationDone   = true;
 bool transmitFlag    = true;
 
 #if defined(HAS_SX1262)
@@ -57,7 +57,7 @@ bool transmitFlag    = true;
 
 namespace LoRa_Utils {
 
-    void setFlag(void) {
+    void IRAM_ATTR setFlag(void) {
         operationDone = true;
     }
 
@@ -164,7 +164,7 @@ namespace LoRa_Utils {
 
         #if defined(HAS_SX1278) || defined(HAS_SX1276)
             state = radio.setOutputPower(currentLoRaType->power);
-            radio.setCurrentLimit(100); // to be validated (80 , 100)?
+            radio.setCurrentLimit(140); // +20dBm on PA_BOOST draws ~120mA, 100mA OCP would clip output power
         #endif
 
         #if defined(HAS_SX1262) || defined(HAS_SX1268) || defined(HAS_LLCC68)
@@ -186,8 +186,24 @@ namespace LoRa_Utils {
         }
     }
 
+    void waitForFreeChannel() {     // listen before talk: CAD, random backoff while busy, send anyway after last try
+        for (int attempt = 0; attempt < 3; attempt++) {
+            #if defined(TTGO_T_BEAM_1W)
+                digitalWrite(RADIO_RXEN, HIGH);
+            #endif
+            int state = radio.scanChannel();
+            #if defined(HAS_SX1278) || defined(HAS_SX1276)
+                if (state == RADIOLIB_CHANNEL_FREE) state = radio.getChannelScanResult();  // no DIO1 in Module(): read CadDetected from IRQ register
+            #endif
+            if (state != RADIOLIB_PREAMBLE_DETECTED && state != RADIOLIB_LORA_DETECTED) return;
+            logger.log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, "LoRa Tx", "Channel busy, backoff");
+            delay(random(500, 1500));
+        }
+    }
+
     void sendNewPacket(const String& newPacket) {
         logger.log(logging::LoggerLevel::LOGGER_LEVEL_INFO, "LoRa Tx","---> %s", newPacket.c_str());
+        waitForFreeChannel();
         /*logger.log(logging::LoggerLevel::LOGGER_LEVEL_WARN, "LoRa","Send data: %s", newPacket.c_str());
         logger.log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, "LoRa","Send data: %s", newPacket.c_str());
         logger.log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, "LoRa","Send data: %s", newPacket.c_str());*/

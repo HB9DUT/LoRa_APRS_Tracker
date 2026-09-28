@@ -80,6 +80,7 @@ namespace GPS_Utils {
             delay(200);
         #endif
 
+        gpsSerial.setRxBufferSize(2048);    // keep NMEA while loop is blocked by LoRa Tx (~2.5s at SF12)
         gpsSerial.begin(GPS_BAUD, SERIAL_8N1, GPS_TX, GPS_RX);
     }
 
@@ -121,6 +122,7 @@ namespace GPS_Utils {
     void calculateHeadingDelta(int speed) {
         uint8_t TurnMinAngle;
         double headingDelta = abs(previousHeading - currentHeading);
+        if (headingDelta > 180) headingDelta = 360 - headingDelta;     // shortest angle across North (e.g. 355 -> 5 = 10)
         if (lastTx > currentSmartBeaconValues.minDeltaBeacon * 1000) {
             if (speed == 0) {
                 TurnMinAngle = currentSmartBeaconValues.turnMinDeg + (currentSmartBeaconValues.turnSlope/(speed + 1));

@@ -551,7 +551,7 @@ void displayShow(const String& header, const String& line1, const String& line2,
     delay(wait);
 }
 
-void startupScreen(uint8_t index, const String& version) {
+void startupScreen(uint8_t index, const String& version, const String& date) {
     String workingFreq = "    LoRa Freq [";
     switch (index) {
         case 0: workingFreq += "EU]"; break;
@@ -559,9 +559,9 @@ void startupScreen(uint8_t index, const String& version) {
         case 2: workingFreq += "UK]"; break;
         case 3: workingFreq += "US]"; break;
     }
-    displayShow(" LoRa APRS", "      (TRACKER)", workingFreq, "", "", "  CA2RXU  " + version, 4000);
-    logger.log(logging::LoggerLevel::LOGGER_LEVEL_INFO, "Main", "RichonGuzman (CA2RXU) --> LoRa APRS Tracker/Station");
-    logger.log(logging::LoggerLevel::LOGGER_LEVEL_INFO, "Main", "Version: %s", version);
+    displayShow(" LoRa APRS", "      (TRACKER)", workingFreq, "", "  CA2RXU & HB9DUT", "  " + version, 4000);
+    logger.log(logging::LoggerLevel::LOGGER_LEVEL_INFO, "Main", "Ricardo Guzman (CA2RXU) & Peter Studer (HB9DUT) --> LoRa APRS Tracker/Station");
+    logger.log(logging::LoggerLevel::LOGGER_LEVEL_INFO, "Main", "Version: %s (%s)", version.c_str(), date.c_str());
 }
 
 String fillMessageLine(const String& line, const int& length) {

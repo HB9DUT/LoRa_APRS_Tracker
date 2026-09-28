@@ -34,6 +34,9 @@
 
                        Ricardo Guzman - CA2RXU
           https://github.com/richonguzman/LoRa_APRS_Tracker
+
+                        Fork by HB9DUT
+             https://github.com/HB9DUT/LoRa_APRS_Tracker
 ____________________________________________________________________*/
 
 #include <BluetoothSerial.h>
@@ -68,8 +71,8 @@ ____________________________________________________________________*/
 #endif
 
 
-String      versionDate             = "2026-04-22";
-String      versionNumber           = "2.4.3.2";
+String      versionDate             = "2026-09-28";
+String      versionNumber           = "2.4.3.2-HB9DUT.1";
 Configuration                       Config;
 HardwareSerial                      gpsSerial(1);
 TinyGPSPlus                         gps;
@@ -136,7 +139,7 @@ void setup() {
     STATION_Utils::loadIndex(0);    // callsign Index
     STATION_Utils::loadIndex(1);    // lora freq settins Index
     STATION_Utils::nearStationInit();
-    startupScreen(loraIndex, versionDate);
+    startupScreen(loraIndex, versionNumber, versionDate);
 
     WIFI_Utils::checkIfWiFiAP();
 

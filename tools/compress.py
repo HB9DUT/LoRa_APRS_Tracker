@@ -32,14 +32,23 @@ files = [
 string_to_find_str = "String"
 string_to_find_ver = "versionDate"
 
+string_to_find_num = "versionNumber"
+versionDate = ""
+versionNumber = ""
+
+def quoted_value(line):
+  start = line.find('"') + 1
+  end = line.find('"', start)
+  return line[start:end] if start > 0 and end > start else ""
+
 with open('src/LoRa_APRS_Tracker.cpp', encoding='utf-8') as cpp_file:
   for line in cpp_file:
-    if string_to_find_str in line and string_to_find_ver in line:
-      start = line.find('"') + 1
-      end = line.find('"', start)
-      if start > 0 and end > start:
-        versionDate = line[start:end]
-        break
+    if string_to_find_str in line and string_to_find_ver in line and not versionDate:
+      versionDate = quoted_value(line)
+    if string_to_find_str in line and string_to_find_num in line and not versionNumber:
+      versionNumber = quoted_value(line)
+    if versionDate and versionNumber:
+      break
        
 for src in files:
   out = src + ".gz"
@@ -49,7 +58,7 @@ for src in files:
     content = f.read()
     
   if src == 'data_embed/index.html':
-    env_vars = env["BOARD"] + "<br>" + ','.join(env["BUILD_FLAGS"]).replace('-Werror -Wall,', '').replace(',-DELEGANTOTA_USE_ASYNC_WEBSERVER=1', '') + "<br>" + "Version date: " + versionDate
+    env_vars = env["BOARD"] + "<br>" + ','.join(env["BUILD_FLAGS"]).replace('-Werror -Wall,', '').replace(',-DELEGANTOTA_USE_ASYNC_WEBSERVER=1', '') + "<br>" + "Version: " + versionNumber + " (" + versionDate + ")"
     current_date = datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S') + " UTC"
     build_info = f'{env_vars}<br>Build date: {current_date}'.encode()
     

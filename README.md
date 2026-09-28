@@ -1,6 +1,8 @@
-# CA2RXU LoRa APRS Tracker/Station
+# CA2RXU & HB9DUT LoRa APRS Tracker/Station
 
 This firmware is for using ESP32 based boards with LoRa Modules and GPS to live in the APRS world.
+
+This is the HB9DUT fork of <a href="https://github.com/richonguzman/LoRa_APRS_Tracker" target="_blank">CA2RXU's LoRa APRS Tracker</a> with additional stability, radio and power optimizations (see Timeline). Current version: **2.4.3.2-HB9DUT.1** (2026-09-28).
 
 ![Screenshot](https://github.com/richonguzman/LoRa_APRS_Tracker/blob/main/images/OledScreen2.jpeg)
 
@@ -10,6 +12,8 @@ __(NOTE: To use Tx/Rx capabilities of this tracker you should have also an Tx/Rx
 ____________________________________________________
 
 # WEB FLASHER/INSTALLER is <a href="https://richonguzman.github.io/lora-tracker-web-flasher/installer.html" target="_blank">here</a>
+
+__(NOTE: the Web Flasher installs the original CA2RXU firmware. For this fork build and upload with PlatformIO.)__
 
 ____________________________________________________
 
@@ -48,7 +52,7 @@ ____________________________________________________
 ____________________________________________________
 ## Timeline (Versions):
 
-- 2026-09-28 Stability, radio and power optimizations (HB9DUT):
+- 2026-09-28 Version 2.4.3.2-HB9DUT.1: stability, radio and power optimizations (HB9DUT):
     - SmartBeacon: heading change across North now calculated correctly (355° -> 5° = 10°, no more false corner beacons).
     - LoRa Rx interrupt flag made `volatile` + `IRAM_ATTR`.
     - Saved callsign/frequency index is validated against the config (no out-of-range access after removing beacons).
